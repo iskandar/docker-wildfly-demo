@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     ports:
+       - "3306:3306"
+     environment:
+       MYSQL_ROOT_PASSWORD: pass123
+       MYSQL_DATABASE: default_db
+       MYSQL_USER: mysqluser
+       MYSQL_PASSWORD: pass123
+
+   cache:
+     image: redis:3.2-alpine
+     volumes:
+       - db_data:/data
+     ports:
+       - "6379:6379"
+
+   web:
+     depends_on:
+       - db
+       - cache
+     build: .
+     ports:
+       - "8080:8080"
+       - "9990:9990"
+     volumes:
+       - ./deployments:/opt/jboss/wildfly/standalone/deployments/
+     env_file:
+       - defaults.env
+       - local.env
+     environment:
+       # Needed by nginx-proxy
+       VIRTUAL_HOST: "*.xip.io"
+
+volumes:
+    db_data:
