@@ -54,30 +54,4 @@ ECR_NAMESPACE=${ECR_NAMESPACE}
 ECS_TASK_FAMILY=${ECS_TASK_FAMILY}
 EOF
 
-# Create a barebones JSON Task definition
-cat > task.json <<EOF
-{
-  "family": "${ECS_TASK_FAMILY}",
-  "containerDefinitions": [
-    {
-      "environment": [],
-      "name": "wildfly",
-      "mountPoints": [],
-      "image": "${DOCKER_HUB_NAMESPACE}/${IMAGE_NAME}:${TAG}",
-      "cpu": 0,
-      "portMappings": [
-        {
-          "protocol": "tcp",
-          "containerPort": 8080
-        }
-      ],
-      "memory": 1024,
-      "essential": true,
-      "volumesFrom": []
-    }
-  ]
-}
-
-EOF
-
 
